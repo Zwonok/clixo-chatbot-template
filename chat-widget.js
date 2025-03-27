@@ -12,19 +12,20 @@
 
 .floating-bubble {
   position: fixed;
-  bottom: 20px;
-  right: 90px;
-  z-index: 999;
+  bottom: 30px;
+  right: 100px;
+  z-index: 1001;
+  padding: 10px 18px;
   background: white;
-  padding: 8px 14px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: 500;
   color: #333;
   animation: pulse 2s infinite;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+  transition: transform 0.3s ease;
 }
+
 
 @keyframes pulse {
   0% { transform: scale(1); opacity: 1; }
