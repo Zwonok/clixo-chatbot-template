@@ -24,6 +24,12 @@
   animation: pulse 2s infinite;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  cursor: pointer;         /* 👈 Makes it a pointer (clickable look) */
+  user-select: none;       /* 👈 Prevents text highlight */
+}
+
+.chat-toggle {
+  animation: pulse 2s infinite;
 }
 
 
@@ -535,11 +541,17 @@ document.body.appendChild(bubble);
       });
       
 
-    // Add close button handlers
-    const closeButtons = chatContainer.querySelectorAll('.close-button');
-    closeButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            chatContainer.classList.remove('open');
-        });
-    });
-})();
+    
+// Add close button handlers
+const closeButtons = chatContainer.querySelectorAll('.close-button');
+closeButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    chatContainer.classList.remove('open');
+    toggleButton.style.display = 'flex';
+
+    // Re-add the floating bubble if it's not already in the DOM
+    if (!document.body.contains(bubble)) {
+      document.body.appendChild(bubble);
+    }
+  });
+});
