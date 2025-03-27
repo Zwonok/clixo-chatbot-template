@@ -39,6 +39,37 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 16px;
+  margin: 8px 0;
+  max-width: 80%;
+  border-radius: 12px;
+  background: var(--chat--color-background);
+  border: 1px solid rgba(133, 79, 255, 0.2);
+  color: var(--chat--color-font);
+  align-self: flex-start;
+}
+
+.typing-indicator span {
+  width: 6px;
+  height: 6px;
+  background: #999;
+  border-radius: 50%;
+  animation: blink 1s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+
 
         .n8n-chat-widget .chat-container {
             position: fixed;
@@ -440,6 +471,21 @@ document.body.appendChild(bubble);
         return crypto.randomUUID();
     }
 
+    function showTypingIndicator() {
+        const typing = document.createElement('div');
+        typing.className = 'typing-indicator';
+        typing.id = 'typing-indicator';
+        typing.innerHTML = '<span></span><span></span><span></span>';
+        messagesContainer.appendChild(typing);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+      
+      function removeTypingIndicator() {
+        const typing = document.getElementById('typing-indicator');
+        if (typing) typing.remove();
+      }
+      
+
     async function startNewConversation() {
         currentSessionId = generateUUID();
         const data = [{
@@ -471,10 +517,7 @@ introMessage.textContent = 'Ask us anything 👇';
 messagesContainer.appendChild(introMessage);
 
 
-            const botMessageDiv = document.createElement('div');
-            botMessageDiv.className = 'chat-message bot';
-            botMessageDiv.textContent = Array.isArray(responseData) ? responseData[0].output : responseData.output;
-            messagesContainer.appendChild(botMessageDiv);
+            
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         } catch (error) {
             console.error('Error:', error);
@@ -491,14 +534,20 @@ messagesContainer.appendChild(introMessage);
                 userId: ""
             }
         };
-
+    
         const userMessageDiv = document.createElement('div');
         userMessageDiv.className = 'chat-message user';
         userMessageDiv.textContent = message;
         messagesContainer.appendChild(userMessageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
+    
         try {
+            showTypingIndicator(); // ⬅️ Show the dots
+    
+            await new Promise(resolve => setTimeout(resolve, 3000)); // ⬅️ Wait 3 seconds
+    
+            removeTypingIndicator(); // ⬅️ Remove the dots
+    
             const response = await fetch(config.webhook.url, {
                 method: 'POST',
                 headers: {
@@ -506,18 +555,20 @@ messagesContainer.appendChild(introMessage);
                 },
                 body: JSON.stringify(messageData)
             });
-            
+    
             const data = await response.json();
-            
+    
             const botMessageDiv = document.createElement('div');
             botMessageDiv.className = 'chat-message bot';
             botMessageDiv.textContent = Array.isArray(data) ? data[0].output : data.output;
             messagesContainer.appendChild(botMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
         } catch (error) {
             console.error('Error:', error);
         }
     }
+    
 
     newChatBtn.addEventListener('click', startNewConversation);
     
