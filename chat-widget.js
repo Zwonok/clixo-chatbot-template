@@ -528,8 +528,11 @@ document.body.appendChild(bubble);
     });
     
     toggleButton.addEventListener('click', () => {
-        chatContainer.classList.toggle('open');
-    });
+        chatContainer.classList.add('open');
+        toggleButton.style.display = 'none';
+        if (bubble) bubble.remove();
+      });
+      
 
     // Add close button handlers
     const closeButtons = chatContainer.querySelectorAll('.close-button');
