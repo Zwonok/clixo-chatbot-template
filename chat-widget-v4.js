@@ -465,6 +465,12 @@ document.body.appendChild(bubble);
             chatContainer.querySelector('.new-conversation').style.display = 'none';
             chatInterface.classList.add('active');
 
+            const introMessage = document.createElement('div');
+introMessage.className = 'chat-message bot';
+introMessage.textContent = 'Ask us anything 👇';
+messagesContainer.appendChild(introMessage);
+
+
             const botMessageDiv = document.createElement('div');
             botMessageDiv.className = 'chat-message bot';
             botMessageDiv.textContent = Array.isArray(responseData) ? responseData[0].output : responseData.output;
