@@ -10,6 +10,29 @@
             font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
 
+        .floating-bubble {
+  position: fixed;
+  bottom: 20px;
+  right: 90px;
+  z-index: 999;
+  background: white;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  animation: pulse 2s infinite;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.75; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+
         .n8n-chat-widget .chat-container {
             position: fixed;
             bottom: 20px;
@@ -384,6 +407,21 @@
     widgetContainer.appendChild(chatContainer);
     widgetContainer.appendChild(toggleButton);
     document.body.appendChild(widgetContainer);
+
+// Add the floating bubble next to the chat toggle
+const bubble = document.createElement('div');
+bubble.className = 'floating-bubble';
+bubble.textContent = 'Ask us anything 👉…';
+
+// Add click functionality to open chat
+bubble.onclick = () => {
+  document.querySelector('.chat-container').classList.add('open');
+  toggleButton.style.display = 'none';
+  bubble.remove(); // remove bubble when chat opens
+};
+
+document.body.appendChild(bubble);
+
 
     const newChatBtn = chatContainer.querySelector('.new-chat-btn');
     const chatInterface = chatContainer.querySelector('.chat-interface');
